@@ -42,26 +42,21 @@ const DataDisplay = () => {
 
   return (
     <>
-      <div style={{ marginTop: "50px" }} className="center-div">
-        <div
-          className="row "
-          style={{ color: "aliceblue", textAlign: "center" }}
-        >
-          <div
-            style={{ width: "250px" }}
-            className="col display-box center-div"
-          >
-            <h5>Gyroscope + Velocity</h5>
+      <div style={{ marginTop: "25px" }} className="center-div">
+        <div className="row " style={{ color: "aliceblue" }}>
+          <div style={{ width: "400px" }} className="col display-box">
+            <h5 style={{ textAlign: "center", paddingBottom: "10px" }}>
+              Gyroscope + Velocity
+            </h5>
             <div className="data-item"> Speed: ######</div>
             <div className="data-item"> Pitch: ######</div>
             <div className="data-item">Roll: ######</div>
             <div className="data-item">Yaw: ######</div>
           </div>
-          <div
-            style={{ width: "500px" }}
-            className="col display-box center-div"
-          >
-            <h5>Solar Panel Array</h5>
+          <div style={{ width: "400px" }} className="col display-box ">
+            <h5 style={{ textAlign: "center", paddingBottom: "10px" }}>
+              Solar Panel Array
+            </h5>
             <div className="data-item">Voltage: ######</div>
             <div className="data-item"> Amperage: #####</div>
             <div className="data-item">Wattage: ######</div>
@@ -69,20 +64,21 @@ const DataDisplay = () => {
             <div className="data-item">Power Consumption: #####</div>
           </div>
         </div>
-        <div
-          className="row"
-          style={{ color: "aliceblue", textAlign: "center" }}
-        >
-          <div className="col display-box" style={{ width: "100px" }}>
-            <h5>Battery</h5>
-            <div className="data-item">Voltage: ######</div>
-            <div className="data-item"> Amperage: #####</div>
-            <div className="data-item">Wattage: ######</div>
+        <div className="row" style={{ color: "aliceblue" }}>
+          <div className="col display-box" style={{ width: "400px" }}>
+            <h5 style={{ textAlign: "center", paddingBottom: "10px" }}>
+              Solar Panel Array
+            </h5>
+            <div className="data-item">Voltage: {Data.id}</div>
+            <div className="data-item"> Amperage: {Data.title}</div>
+            <div className="data-item">Wattage: {Data.userId}</div>
             <div className="data-item">Power Production: #####</div>
             <div className="data-item">Power Consumption: #####</div>
           </div>
-          <div style={{ width: "500px" }} className="col display-box">
-            <h5>Misc.</h5>
+          <div style={{ width: "400px" }} className="col display-box">
+            <h5 style={{ textAlign: "center", paddingBottom: "10px" }}>
+              Misc.
+            </h5>
             <div className="data-item">Time Since Start: ######</div>
             <div className="data-item"> Est. Remaining Time: #####</div>
           </div>
