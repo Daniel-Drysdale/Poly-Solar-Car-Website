@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 type SolarCarData = {
+  //Replace this as neccessary for InfluxDB
   userId: number;
   id: number;
   title: string;
@@ -35,14 +36,58 @@ const DataDisplay = () => {
     fetch_data();
 
     const intervalId = setInterval(fetch_data, 500);
+
     return () => clearInterval(intervalId);
   }, []);
 
   return (
     <>
-      <div>{Data.userId}</div>
-      <div>{Data.id}</div>
-      <div>{Data.title}</div>
+      <div style={{ marginTop: "50px" }} className="center-div">
+        <div
+          className="row "
+          style={{ color: "aliceblue", textAlign: "center" }}
+        >
+          <div
+            style={{ width: "250px" }}
+            className="col display-box center-div"
+          >
+            <h5>Gyroscope + Velocity</h5>
+            <div className="data-item"> Speed: ######</div>
+            <div className="data-item"> Pitch: ######</div>
+            <div className="data-item">Roll: ######</div>
+            <div className="data-item">Yaw: ######</div>
+          </div>
+          <div
+            style={{ width: "500px" }}
+            className="col display-box center-div"
+          >
+            <h5>Solar Panel Array</h5>
+            <div className="data-item">Voltage: ######</div>
+            <div className="data-item"> Amperage: #####</div>
+            <div className="data-item">Wattage: ######</div>
+            <div className="data-item">Power Production: #####</div>
+            <div className="data-item">Power Consumption: #####</div>
+          </div>
+        </div>
+        <div
+          className="row"
+          style={{ color: "aliceblue", textAlign: "center" }}
+        >
+          <div className="col display-box" style={{ width: "100px" }}>
+            <h5>Battery</h5>
+            <div className="data-item">Voltage: ######</div>
+            <div className="data-item"> Amperage: #####</div>
+            <div className="data-item">Wattage: ######</div>
+            <div className="data-item">Power Production: #####</div>
+            <div className="data-item">Power Consumption: #####</div>
+          </div>
+          <div style={{ width: "500px" }} className="col display-box">
+            <h5>Misc.</h5>
+            <div className="data-item">Time Since Start: ######</div>
+            <div className="data-item"> Est. Remaining Time: #####</div>
+          </div>
+        </div>
+      </div>
     </>
   );
 };

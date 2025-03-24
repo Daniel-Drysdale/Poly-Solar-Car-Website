@@ -7,7 +7,7 @@
 
 header {
   width: 100vw;
-  height: 75px;
+  height: 85px;
   border-bottom: solid 1px rgba(16, 16, 16, 0.1);
   font-family: "Poppins";
 }
@@ -33,7 +33,11 @@ header .inner {
   height: 100%;
   display: block;
   margin: 0 auto;
-  background-color: #563baf;
+  background-image: linear-gradient(
+    180deg,
+    #7d25e0 25.56391096951669%,
+    #262626 100%
+  );
 }
 
 header .logo {
@@ -45,8 +49,4 @@ header .logo {
 header .logo img {
   height: 70px;
   align-self: center;
-}
-
-.text {
-  font-family: Georgia, "Times New Roman", Times, serif;
 }
