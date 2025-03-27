@@ -67,7 +67,7 @@ const DataDisplay = () => {
         <div className="row" style={{ color: "aliceblue" }}>
           <div className="col display-box" style={{ width: "400px" }}>
             <h5 style={{ textAlign: "center", paddingBottom: "10px" }}>
-              Solar Panel Array
+              Battery
             </h5>
             <div className="data-item">Voltage: {Data.id}</div>
             <div className="data-item"> Amperage: {Data.title}</div>
