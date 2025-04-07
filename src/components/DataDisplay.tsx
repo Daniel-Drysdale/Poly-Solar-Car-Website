@@ -19,7 +19,7 @@ const DataDisplay = () => {
     }
     return randomNumbers;
   }
-  const [ChartData, setChartData] = useState<number[]>();
+  const [ChartData, setChartData] = useState<number[]>([]);
 
   const [Data, setData] = useState<SolarCarData>({
     id: 0,
