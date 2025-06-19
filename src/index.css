@@ -28,7 +28,7 @@ header {
 }
 
 header .inner {
-  width: 100%s; /* This is the inner width of the content inside of your header (80%, etc) */
+  width: 100%;
   height: 100%;
   display: block;
   margin: 0 auto;

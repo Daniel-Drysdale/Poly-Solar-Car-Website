@@ -1,112 +1,101 @@
 import { useEffect, useState } from "react";
-import LineChart from "./LineChart";
 
-type SolarCarData = {
-  //Replace this as neccessary for InfluxDB
-  userId: number;
-  id: number;
-  title: string;
-};
+interface TimestampedEntry {
+  [key: string]: Array<[number, Record<string, number>, string]>;
+}
+
+interface SolarCarData {
+  body: TimestampedEntry;
+}
 
 const DataDisplay = () => {
   const BASE_URL = import.meta.env.VITE_BASE_DB_URL;
-
-  function generateRandomNumbers() {
-    const randomNumbers = [];
-    for (let i = 0; i < 10; i++) {
-      const randomNum = Math.floor(Math.random() * (9 - 1)) + 1; // Generates a number between 5 and 9
-      randomNumbers.push(randomNum);
-    }
-    return randomNumbers;
-  }
-  const [ChartData, setChartData] = useState<number[]>([]);
-
-  const [Data, setData] = useState<SolarCarData>({
-    id: 0,
-    userId: 0,
-    title: "(Defaults) Some statistics there",
-  });
+  const [Data, setData] = useState<SolarCarData | null>(null);
 
   useEffect(() => {
-    const fetch_data = async () => {
+    const fetchData = async () => {
       try {
-        const DBresponse = await fetch(BASE_URL, { method: "GET" });
+        const response = await fetch(`${BASE_URL}/get_data`);
+        if (!response.ok) throw new Error(`Status: ${response.status}`);
+        const jsonData: SolarCarData = await response.json();
+        setData(jsonData);
 
-        if (!DBresponse.ok) {
-          throw new Error(`Error in Fetch, Status: ${DBresponse.status}`);
+        if (Object.keys(jsonData).length === 0) {
+          ("");
         }
-
-        const DBJsonData = await DBresponse.json();
-        setChartData(generateRandomNumbers());
-
-        setData(DBJsonData);
       } catch (error) {
         console.error("Fetch error:", error);
       }
     };
 
-    fetch_data();
-
-    const intervalId = setInterval(fetch_data, 1000);
-
+    fetchData();
+    const intervalId = setInterval(fetchData, 2000);
     return () => clearInterval(intervalId);
-  }, []);
+  }, [BASE_URL]);
+
+  const entries = Data?.body ? Object.entries(Data.body) : [];
 
   return (
-    <>
-      <div style={{ marginTop: "25px", width: "100%" }} className="center-div">
-        <div className="row " style={{ color: "aliceblue" }}>
-          <div
-            style={{ minWidth: "400px", maxWidth: "800px", maxHeight: "400px" }}
-            className="col display-box"
-          >
-            <h5 style={{ textAlign: "center", paddingBottom: "10px" }}>
-              Gyroscope + Velocity
-            </h5>
-            <div className="data-item"> Speed: ######</div>
-            <div className="data-item"> Pitch: ######</div>
-            <div className="data-item">Roll: ######</div>
-            <div className="data-item">Yaw: ######</div>
+    <div style={{ marginTop: "25px", width: "100%" }} className="center-div">
+      {Array.from({ length: Math.ceil(entries.length / 3) }, (_, rowIndex) => {
+        const rowItems = entries.slice(rowIndex * 3, rowIndex * 3 + 3);
+
+        return (
+          <div className="row" style={{ color: "aliceblue" }} key={rowIndex}>
+            {rowItems.map(([sectionKey, timeSeriesArray]) => {
+              const latestEntry = timeSeriesArray[timeSeriesArray.length - 1];
+
+              const latestData = latestEntry?.[1];
+
+              return (
+                <div
+                  className="col"
+                  key={sectionKey}
+                  style={{
+                    marginLeft: "10px",
+                    marginRight: "10px",
+                    marginBottom: "40px",
+                  }}
+                >
+                  <div className="display-box data-box center-div">
+                    <center>
+                      <h4
+                        style={{
+                          textTransform: "capitalize",
+                        }}
+                      >
+                        {sectionKey.replace(/_/g, " ")}
+                      </h4>
+                    </center>
+
+                    <div className="data-item"></div>
+
+                    {latestData ? (
+                      Object.entries(latestData).map(([label, value]) => (
+                        <div
+                          className="data-item"
+                          key={label}
+                          style={{ minWidth: "300px" }}
+                        >
+                          <b>{label.replace(/_/g, " ")}</b>:
+                          <span style={{ float: "right" }}>
+                            {value === -999 && "NAN"}
+
+                            {value !== -999 && value.toFixed(3)}
+                          </span>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="data-item">No data</div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
           </div>
-          <div
-            style={{ minWidth: "400px", maxWidth: "800px", minHeight: "400px" }}
-            className="col display-box "
-          >
-            <h5 style={{ textAlign: "center", paddingBottom: "10px" }}>
-              Solar Panel Array
-            </h5>
-            <div>
-              <LineChart data={ChartData} />
-            </div>
-          </div>
-        </div>
-        <div className="row" style={{ color: "aliceblue" }}>
-          <div
-            className="col display-box"
-            style={{ minWidth: "400px", maxWidth: "800px", minHeight: "200px" }}
-          >
-            <h5 style={{ textAlign: "center", paddingBottom: "10px" }}>
-              Battery
-            </h5>
-            <div className="data-item">Voltage: {Data.id}</div>
-            <div className="data-item"> Amperage: {Data.title}</div>
-            <div className="data-item">Wattage: {Data.userId}</div>
-            <div className="data-item">Power Production: #####</div>
-            <div className="data-item">Power Consumption: #####</div>
-          </div>
-          <div
-            style={{ width: "50%", minWidth: "400px", minHeight: "200px" }}
-            className="col display-box"
-          >
-            <h5 style={{ textAlign: "center", paddingBottom: "10px" }}>
-              Misc.
-            </h5>
-            <div className="data-item">Time Since Start: ######</div>
-            <div className="data-item"> Est. Remaining Time: #####</div>
-          </div>
-        </div>
-      </div>
-    </>
+        );
+      })}
+    </div>
   );
 };
 
