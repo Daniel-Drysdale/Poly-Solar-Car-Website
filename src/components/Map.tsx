@@ -1,20 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Dropdown from "./Dropdown";
 
-interface SolarCarData {
-  body: TimestampedEntry;
-}
+// interface SolarCarData {
+//   body: TimestampedEntry;
+// }
 
-interface TimestampedEntry {
-  [key: string]: Array<[number, Record<string, number>, string]>;
-}
+// interface TimestampedEntry {
+//   [key: string]: Array<[number, Record<string, number>, string]>;
+// }
 
 const Map = () => {
-  const [data, setData] = useState<SolarCarData | null>(null);
+  //const [data, setData] = useState<SolarCarData | null>(null);
 
-  const BASE_URL = import.meta.env.VITE_BASE_DB_URL;
+  //const BASE_URL = import.meta.env.VITE_BASE_DB_URL;
 
   const location = useLocation();
   const { password } = location.state || {};
@@ -29,7 +29,7 @@ const Map = () => {
   // useEffect(() => {
   //   const fetchData = async () => {
   //     try {
-  //       const response = await fetch(`${BASE_URL}/get_graph_data/`);
+  //       const response = await fetch(`${BASE_URL}/`);
   //       if (!response.ok) throw new Error(`Status: ${response.status}`);
   //       const jsonData = await response.json();
   //       setData(jsonData);
