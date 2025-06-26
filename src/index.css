@@ -43,6 +43,7 @@ header .logo {
   display: table;
   height: 100%;
   font-family: monospace;
+  margin-top: 2px;
 }
 
 header .logo img {
