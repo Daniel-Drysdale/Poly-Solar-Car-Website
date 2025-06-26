@@ -34,7 +34,6 @@ const DataDisplay = () => {
         setData(jsonData);
 
         if (Object.keys(jsonData).length === 0) {
-          ("");
         }
       } catch (error) {
         console.error("Fetch error:", error);

@@ -22,7 +22,7 @@ const generateTimeLabels = (length: number) => {
   return Array.from({ length }, (_, i) => {
     const timestamp = new Date(now - (length - 1 - i) * 1000);
     return timestamp.toLocaleTimeString();
-  });
+  }).reverse();
 };
 
 const ChartData = () => {

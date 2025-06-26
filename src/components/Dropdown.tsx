@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import menu from "/src/assets/menu.png";
 
 interface DropdownProps {
   onSelect: (value: string) => void;
@@ -29,7 +30,7 @@ const Dropdown = ({ onSelect }: DropdownProps) => {
           type="button"
           onClick={() => setIsOpen((prev) => !prev)}
         >
-          <img style={{ width: "25px" }} src="./src/assets/menu.png" />
+          <img style={{ width: "25px" }} src={menu} />
         </button>
         {isOpen && (
           <ul className="dropdown-menu show dropdown-menu-lg-end">
