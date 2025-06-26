@@ -29,7 +29,7 @@ const Dropdown = ({ onSelect }: DropdownProps) => {
           type="button"
           onClick={() => setIsOpen((prev) => !prev)}
         >
-          <img style={{ width: "25px" }} src="/src/assets/DropDownMenu.png" />
+          <img style={{ width: "25px" }} src="./src/assets/menu.png" />
         </button>
         {isOpen && (
           <ul className="dropdown-menu show dropdown-menu-lg-end">
