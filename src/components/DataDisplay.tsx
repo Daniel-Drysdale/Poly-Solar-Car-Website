@@ -25,6 +25,7 @@ const DataDisplay = () => {
   const BASE_URL = import.meta.env.VITE_BASE_DB_URL;
   const [Data, setData] = useState<SolarCarData | null>(null);
 
+  //Get Request to the PI for the Raw Data
   useEffect(() => {
     const fetchData = async () => {
       try {

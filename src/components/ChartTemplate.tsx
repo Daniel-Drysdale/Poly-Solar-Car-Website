@@ -77,7 +77,6 @@ const LineChart: FC<LineChartProps> = ({
     },
     scales: {
       x: {
-        reverse: true,
         min: minX,
         max: maxX,
         ticks: {

@@ -14,16 +14,18 @@ interface SolarCarData {
   };
 }
 
-const extractValues = (arr: [string, number][]) =>
+const extractValues = (arr: [string, number][]): number[] =>
   arr.map(([, value]) => value);
 
-const generateTimeLabels = (length: number) => {
-  const now = Date.now();
-  return Array.from({ length }, (_, i) => {
-    const timestamp = new Date(now - (length - 1 - i) * 1000);
-    return timestamp.toLocaleTimeString();
-  }).reverse();
-};
+const extractTimestamps = (arr: [string, number][]): string[] =>
+  arr.map(([timestamp]) => {
+    const cleaned = timestamp.replace(/:\s+/g, ":");
+    return new Date(cleaned).toLocaleTimeString([], {
+      hour: "numeric",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+  });
 
 const ChartData = () => {
   const [current, setCurrent] = useState<number[]>([]);
@@ -47,6 +49,7 @@ const ChartData = () => {
     }
   }, [password, navigate]);
 
+  //GET request is sent to the PI for chart data every 5 seconds
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -54,6 +57,7 @@ const ChartData = () => {
         if (!response.ok) throw new Error(`Status: ${response.status}`);
         const jsonData: SolarCarData = await response.json();
 
+        //Gets Y Axis Values
         const newCurrent = extractValues(jsonData.body.Pack_Current);
         const newVoltage = extractValues(jsonData.body.Pack_Voltage);
         const newSOC = extractValues(jsonData.body.Pack_SoC);
@@ -61,6 +65,15 @@ const ChartData = () => {
           jsonData.body.Pack_SoC_Percentage
         );
 
+        //Gets X Axis Values (Timestamps)
+        const currentTimestamps = extractTimestamps(jsonData.body.Pack_Current);
+        const voltageTimestamps = extractTimestamps(jsonData.body.Pack_Voltage);
+        const socTimestamps = extractTimestamps(jsonData.body.Pack_SoC);
+        const socPercentTimestamps = extractTimestamps(
+          jsonData.body.Pack_SoC_Percentage
+        );
+
+        //Update rolling state (max 150 entries, about 5 minutes worth of data)
         setCurrent((prev) => [...prev, ...newCurrent].slice(-150));
         setVoltage((prev) => [...prev, ...newVoltage].slice(-150));
         setSOC((prev) => [...prev, ...newSOC].slice(-150));
@@ -68,11 +81,12 @@ const ChartData = () => {
           [...prev, ...newSOCPercentage].slice(-150)
         );
 
-        const labels = generateTimeLabels(150);
-        setCurrentLabels(labels);
-        setVoltageLabels(labels);
-        setSOCLabels(labels);
-        setSocPercentLabels(labels);
+        setCurrentLabels((prev) => [...prev, ...currentTimestamps].slice(-150));
+        setVoltageLabels((prev) => [...prev, ...voltageTimestamps].slice(-150));
+        setSOCLabels((prev) => [...prev, ...socTimestamps].slice(-150));
+        setSocPercentLabels((prev) =>
+          [...prev, ...socPercentTimestamps].slice(-150)
+        );
       } catch (error) {
         console.error("Fetch error:", error);
       }
@@ -99,8 +113,9 @@ const ChartData = () => {
 
       <center style={{ marginTop: "15px" }}>
         <p style={{ color: "white" }}>
-          <b> !! The most recent data will be on the right !!</b>
+          <b>!! The most recent data will be on the right !!</b>
         </p>
+
         <div
           style={{ maxWidth: "80%", minWidth: "400px", marginBottom: "30px" }}
         >
