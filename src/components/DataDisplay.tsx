@@ -18,7 +18,7 @@ const DataDisplay = () => {
 
   useEffect(() => {
     if (!password) {
-      navigate("/");
+      navigate("/", { state: { password } });
     }
   }, [password, navigate]);
 
