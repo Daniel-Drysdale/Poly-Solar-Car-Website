@@ -14,18 +14,19 @@ interface SolarCarData {
   };
 }
 
+const SortableDate = (ts: string): number => {
+  const cleaned = ts.replace(/:\s+/g, ":").replace(" ", "T");
+  return new Date(cleaned).getTime();
+};
+
 const sortByTimestamp = (data: TimestampedData[]): TimestampedData[] =>
-  [...data].sort(([a], [b]) => new Date(a).getTime() - new Date(b).getTime());
-
-const cleanTimestamp = (ts: string): string => ts.replace(/:\s+/g, ":");
-
-const parseDateSafe = (ts: string): Date => new Date(cleanTimestamp(ts));
+  [...data].sort(([a, _], [b, __]) => SortableDate(a) - SortableDate(b));
 
 const processData = (data: TimestampedData[]) => {
   const sorted = sortByTimestamp(data);
   const values = sorted.map(([, val]) => val);
   const labels = sorted.map(([ts]) =>
-    parseDateSafe(ts).toLocaleTimeString([], {
+    new Date(ts.replace(/:\s+/g, ":")).toLocaleTimeString([], {
       hour: "numeric",
       minute: "2-digit",
       second: "2-digit",
