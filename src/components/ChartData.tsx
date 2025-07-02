@@ -143,7 +143,7 @@ const ChartData = () => {
           <LineChart
             data={voltage}
             labels={voltageLabels}
-            labelX="Time (s)"
+            labelX="Time"
             labelY="Voltage (V)"
             minX={0}
             minY={0}
@@ -158,7 +158,7 @@ const ChartData = () => {
           <LineChart
             data={SOC}
             labels={SOCLabels}
-            labelX="Time (s)"
+            labelX="Time"
             labelY="State of Charge"
             minX={0}
             minY={-10}
@@ -173,7 +173,7 @@ const ChartData = () => {
           <LineChart
             data={packSoCPercentage}
             labels={socPercentLabels}
-            labelX="Time (s)"
+            labelX="Time"
             labelY="SoC %"
             minX={0}
             minY={0}
