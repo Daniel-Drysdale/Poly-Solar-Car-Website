@@ -13,9 +13,10 @@ const Login = () => {
 
   const handleLoginSubmit = async (): Promise<void> => {
     if (password !== correctPassword) {
-      alert("Passwords do not match!");
+      alert("Incorrect Credentials, try again.");
       return;
     }
+    sessionStorage.setItem("auth", password);
     navigate("/data", { state: { password: password } });
   };
 

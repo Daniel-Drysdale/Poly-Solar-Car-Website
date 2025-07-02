@@ -48,7 +48,7 @@ const LineChart: FC<LineChartProps> = ({
         data: data,
         backgroundColor: "#e396ff",
         borderColor: "#e396ff",
-        borderWidth: 1,
+        borderWidth: 0.75,
         pointBackgroundColor: "#d1baba",
         pointBorderColor: "#e396ff",
         pointHoverBackgroundColor: "rgba(125, 37, 224, 1)",

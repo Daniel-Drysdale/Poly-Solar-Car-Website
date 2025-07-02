@@ -17,8 +17,10 @@ const DataDisplay = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!password) {
-      navigate("/", { state: { password } });
+    const auth = sessionStorage.getItem("auth");
+
+    if (!password && auth !== password) {
+      navigate("/");
     }
   }, [password, navigate]);
 
@@ -47,6 +49,20 @@ const DataDisplay = () => {
   }, [BASE_URL]);
 
   const entries = Data?.body ? Object.entries(Data.body) : [];
+
+  const formatSectionKey = (key: string) => {
+    if (key.includes("cmu")) {
+      return "CMU " + key[4];
+    }
+
+    if (!key.includes("_")) return key;
+
+    const index = key.indexOf("_");
+
+    if (index === 0) {
+    }
+    return key.slice(index + 1).replace(/_/g, " ");
+  };
 
   return (
     <>
@@ -97,7 +113,7 @@ const DataDisplay = () => {
                               textTransform: "capitalize",
                             }}
                           >
-                            {sectionKey.replace(/_/g, " ")}
+                            {formatSectionKey(sectionKey)}
                           </h4>
                         </center>
 

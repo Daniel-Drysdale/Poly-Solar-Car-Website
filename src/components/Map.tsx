@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Dropdown from "./Dropdown";
+import message from "/src/assets/message.png";
 
 // interface SolarCarData {
 //   body: TimestampedEntry;
@@ -21,7 +22,9 @@ const Map = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!password) {
+    const auth = sessionStorage.getItem("auth");
+
+    if (!password && auth !== password) {
       navigate("/");
     }
   }, [password, navigate]);
@@ -58,9 +61,10 @@ const Map = () => {
           }
         }}
       />
-      <div style={{ marginTop: "30px" }}>
-        <canvas> </canvas>
+      <div className="center-div" style={{ marginTop: "50px" }}>
+        <img src={message} style={{ width: "75%", marginLeft: "15%" }} />
       </div>
+      <canvas> </canvas>
     </>
   );
 };

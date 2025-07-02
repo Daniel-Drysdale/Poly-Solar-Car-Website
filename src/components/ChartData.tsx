@@ -14,18 +14,27 @@ interface SolarCarData {
   };
 }
 
-const extractValues = (arr: [string, number][]): number[] =>
-  arr.map(([, value]) => value);
+const sortByTimestamp = (data: TimestampedData[]): TimestampedData[] =>
+  [...data].sort(([a], [b]) => new Date(a).getTime() - new Date(b).getTime());
 
-const extractTimestamps = (arr: [string, number][]): string[] =>
-  arr.map(([timestamp]) => {
-    const cleaned = timestamp.replace(/:\s+/g, ":");
-    return new Date(cleaned).toLocaleTimeString([], {
+const processData = (data: TimestampedData[]) => {
+  const sorted = sortByTimestamp(data);
+  const values = sorted.map(([, val]) => val);
+  const labels = sorted.map(([ts]) =>
+    new Date(ts).toLocaleTimeString([], {
       hour: "numeric",
       minute: "2-digit",
       second: "2-digit",
-    });
-  });
+    })
+  );
+  return { values, labels };
+};
+
+const chartContainerStyle = {
+  maxWidth: "80%",
+  minWidth: "400px",
+  marginBottom: "30px",
+};
 
 const ChartData = () => {
   const [current, setCurrent] = useState<number[]>([]);
@@ -44,7 +53,8 @@ const ChartData = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!password) {
+    const auth = sessionStorage.getItem("auth");
+    if (!password && auth !== password) {
       navigate("/");
     }
   }, [password, navigate]);
@@ -57,35 +67,32 @@ const ChartData = () => {
         if (!response.ok) throw new Error(`Status: ${response.status}`);
         const jsonData: SolarCarData = await response.json();
 
-        //Gets Y Axis Values
-        const newCurrent = extractValues(jsonData.body.Pack_Current);
-        const newVoltage = extractValues(jsonData.body.Pack_Voltage);
-        const newSOC = extractValues(jsonData.body.Pack_SoC);
-        const newSOCPercentage = extractValues(
-          jsonData.body.Pack_SoC_Percentage
+        //Sorts Timestamps so they aren't incorrectly displayed
+        const { values: newCurrent, labels: currentTimestamps } = processData(
+          jsonData.body.Pack_Current
         );
-
-        //Gets X Axis Values (Timestamps)
-        const currentTimestamps = extractTimestamps(jsonData.body.Pack_Current);
-        const voltageTimestamps = extractTimestamps(jsonData.body.Pack_Voltage);
-        const socTimestamps = extractTimestamps(jsonData.body.Pack_SoC);
-        const socPercentTimestamps = extractTimestamps(
-          jsonData.body.Pack_SoC_Percentage
+        const { values: newVoltage, labels: voltageTimestamps } = processData(
+          jsonData.body.Pack_Voltage
         );
+        const { values: newSOC, labels: socTimestamps } = processData(
+          jsonData.body.Pack_SoC
+        );
+        const { values: newSOCPercentage, labels: socPercentTimestamps } =
+          processData(jsonData.body.Pack_SoC_Percentage);
 
-        //Update rolling state (max 150 entries, about 5 minutes worth of data)
-        setCurrent((prev) => [...prev, ...newCurrent].slice(-150));
-        setVoltage((prev) => [...prev, ...newVoltage].slice(-150));
-        setSOC((prev) => [...prev, ...newSOC].slice(-150));
+        //Update rolling state arrays (max 500 entries)
+        setCurrent((prev) => [...prev, ...newCurrent].slice(-500));
+        setVoltage((prev) => [...prev, ...newVoltage].slice(-500));
+        setSOC((prev) => [...prev, ...newSOC].slice(-500));
         setPackSoCPercentage((prev) =>
-          [...prev, ...newSOCPercentage].slice(-150)
+          [...prev, ...newSOCPercentage].slice(-500)
         );
 
-        setCurrentLabels((prev) => [...prev, ...currentTimestamps].slice(-150));
-        setVoltageLabels((prev) => [...prev, ...voltageTimestamps].slice(-150));
-        setSOCLabels((prev) => [...prev, ...socTimestamps].slice(-150));
+        setCurrentLabels((prev) => [...prev, ...currentTimestamps].slice(-500));
+        setVoltageLabels((prev) => [...prev, ...voltageTimestamps].slice(-500));
+        setSOCLabels((prev) => [...prev, ...socTimestamps].slice(-500));
         setSocPercentLabels((prev) =>
-          [...prev, ...socPercentTimestamps].slice(-150)
+          [...prev, ...socPercentTimestamps].slice(-500)
         );
       } catch (error) {
         console.error("Fetch error:", error);
@@ -126,7 +133,7 @@ const ChartData = () => {
             labelY="Current (A)"
             minX={0}
             minY={-40}
-            maxX={150}
+            maxX={500}
             maxY={40}
           />
         </div>
@@ -141,7 +148,7 @@ const ChartData = () => {
             labelY="Voltage (V)"
             minX={0}
             minY={0}
-            maxX={150}
+            maxX={500}
             maxY={120}
           />
         </div>
@@ -155,8 +162,8 @@ const ChartData = () => {
             labelX="Time (s)"
             labelY="State of Charge"
             minX={0}
-            minY={0}
-            maxX={150}
+            minY={-10}
+            maxX={500}
             maxY={15}
           />
         </div>
@@ -171,7 +178,7 @@ const ChartData = () => {
             labelY="SoC %"
             minX={0}
             minY={0}
-            maxX={150}
+            maxX={500}
             maxY={100}
           />
         </div>
