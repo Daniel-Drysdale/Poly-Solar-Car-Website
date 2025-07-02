@@ -17,11 +17,20 @@ interface SolarCarData {
 const sortByTimestamp = (data: TimestampedData[]): TimestampedData[] =>
   [...data].sort(([a], [b]) => new Date(a).getTime() - new Date(b).getTime());
 
+//Handling Mobile shenanigans
+const parseDateSafe = (ts: string): Date => {
+  let parsed = new Date(ts);
+  if (isNaN(parsed.getTime())) {
+    parsed = new Date(ts + "Z");
+  }
+  return parsed;
+};
+
 const processData = (data: TimestampedData[]) => {
   const sorted = sortByTimestamp(data);
   const values = sorted.map(([, val]) => val);
   const labels = sorted.map(([ts]) =>
-    new Date(ts).toLocaleTimeString([], {
+    parseDateSafe(ts).toLocaleTimeString([], {
       hour: "numeric",
       minute: "2-digit",
       second: "2-digit",
