@@ -30,12 +30,6 @@ const processData = (data: TimestampedData[]) => {
   return { values, labels };
 };
 
-const chartContainerStyle = {
-  maxWidth: "80%",
-  minWidth: "400px",
-  marginBottom: "30px",
-};
-
 const ChartData = () => {
   const [current, setCurrent] = useState<number[]>([]);
   const [voltage, setVoltage] = useState<number[]>([]);
