@@ -163,7 +163,6 @@ const ChartData = () => {
             minX={0}
             minY={-10}
             maxX={500}
-            maxY={15}
             maxY={25}
           />
         </div>

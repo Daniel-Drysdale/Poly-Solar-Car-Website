@@ -1,1 +1,1 @@
-{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/datadisplay.tsx"],"errors":true,"version":"5.7.3"}
+{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/chartdata.tsx","./src/components/charttemplate.tsx","./src/components/datadisplay.tsx","./src/components/dropdown.tsx","./src/components/login.tsx","./src/components/map.tsx"],"errors":true,"version":"5.7.3"}
